@@ -1,4 +1,4 @@
 *.swp
-MySQL-Workbench-DBIC*
+MySQL-Workbench-SQLiteSimple*
 .build*
 t/*.bak
