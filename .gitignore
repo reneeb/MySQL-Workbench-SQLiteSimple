@@ -1,0 +1,4 @@
+*.swp
+MySQL-Workbench-DBIC*
+.build*
+t/*.bak
