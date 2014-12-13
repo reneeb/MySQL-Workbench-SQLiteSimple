@@ -13,7 +13,7 @@ use MySQL::Workbench::Parser;
 
 # ABSTRACT: create DBIC scheme for MySQL workbench .mwb files
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has output_path    => ( is => 'ro', required => 1, default => sub { '.' } );
 has file           => ( is => 'ro', required => 1 );
@@ -80,12 +80,15 @@ sub _create_tables {
     
         my $name    = $table->name;
         my @columns = $self->_get_columns( $table );
+        my $pk      = sprintf ",\n    PRIMARY KEY (%s)", join ', ', @{ $table->primary_key || [] };
+        if ( first { $_ =~ /PRIMARY KEY/ }@columns ) {
+            $pk = '';
+        }
 
         my $sql = sprintf q~CREATE TABLE `%s` (
-    %s,
-    PRIMARY KEY (%s)
+    %s%s
 );
-~, $name, join( ",\n    ", @columns), join( ", ", @{ $table->primary_key || [] } );
+~, $name, join( ",\n    ", @columns), $pk;
         push @sqls, $sql;
     }
 
@@ -110,10 +113,12 @@ sub _get_columns {
         }
 
         my $name           = $column->name;
-        my $not_null       = $column->not_null ? 'NOT NULL' : '';
-        my $auto_increment = $column->autoincrement ? 'AUTOINCREMENT' : '';
-        my $single_column  = sprintf q~%s %s %s %s~,
-            $name, $sqlite_type, $not_null, $auto_increment;
+        my $not_null       = $column->not_null ? ' NOT NULL' : '';
+        my $auto_increment = $column->autoincrement ? ' AUTOINCREMENT' : '';
+        my $pk             = $auto_increment ? ' PRIMARY KEY' : '';
+
+        my $single_column  = sprintf q~%s %s%s%s%s~,
+            $name, $sqlite_type, $not_null, $pk, $auto_increment;
 
         push @create_columns, $single_column;
     }

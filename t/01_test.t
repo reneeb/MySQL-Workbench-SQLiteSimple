@@ -39,22 +39,21 @@ done_testing();
 
 sub _get_check {
     return q~CREATE TABLE `Gefa_User` (
-    UserID INTEGER NOT NULL ,
-    Username TEXT  ,
+    UserID INTEGER NOT NULL,
+    Username TEXT,
     PRIMARY KEY (UserID)
 );
 
 
 CREATE TABLE `Role` (
-    RoleID INTEGER NOT NULL AUTOINCREMENT,
-    Rolename TEXT  ,
-    PRIMARY KEY (RoleID)
+    RoleID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    Rolename TEXT
 );
 
 
 CREATE TABLE `UserRole` (
-    UserID INTEGER NOT NULL ,
-    RoleID INTEGER NOT NULL ,
+    UserID INTEGER NOT NULL,
+    RoleID INTEGER NOT NULL,
     PRIMARY KEY (UserID, RoleID)
 );
 ~;
