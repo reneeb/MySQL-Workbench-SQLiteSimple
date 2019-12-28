@@ -142,7 +142,11 @@ __END__
         output_path    => $some_path,
     );
 
+    # Write to file
     $foo->create_sql;
+
+    # Don't write to file
+    my @queries = $foo->create_sql('no_files' => 1);
 
 =head1 METHODS
 
