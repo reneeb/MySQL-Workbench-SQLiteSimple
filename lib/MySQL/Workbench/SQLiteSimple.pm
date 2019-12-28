@@ -19,8 +19,8 @@ has file           => ( is => 'ro', required => 1 );
 sub create_sql {
     my $self = shift;
     my %opts = @_;
-    
-    my $parser = MySQL::Workbench::Parser->new( file => $self->file ); 
+
+    my $parser = MySQL::Workbench::Parser->new( file => $self->file );
     my @tables = @{ $parser->tables };
 
     my @tables_sql = $self->_create_tables( \@tables );
@@ -34,10 +34,10 @@ sub create_sql {
 
 sub _write_files{
     my ($self, @sqls) = @_;
-    
+
     my $dir = $self->_untaint_path( $self->output_path || '.' );
     my $path = File::Spec->catfile( $dir, 'sqlite.sql' );
-        
+
     unless( -e $dir ){
         $self->_mkpath( $dir );
     }
@@ -63,9 +63,9 @@ sub _untaint_path{
 
 sub _mkpath{
     my ($self, $path) = @_;
-    
+
     my @parts = split /[\\\/]/, $path;
-    
+
     for my $i ( 0..$#parts ){
         my $dir = File::Spec->catdir( @parts[ 0..$i ] );
         $dir = $self->_untaint_path( $dir );
@@ -80,7 +80,7 @@ sub _create_tables {
 
     my @sqls;
     for my $table ( @{ $tables } ) {
-    
+
         my $name    = $table->name;
         my @columns = $self->_get_columns( $table );
         my $pk      = sprintf ",\n    PRIMARY KEY (%s)", join ', ', @{ $table->primary_key || [] };
